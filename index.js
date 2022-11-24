@@ -4,56 +4,67 @@ const Department = require("./lib/department.js");
 const Employee = require("./lib/employee.js");
 const Role = require("./lib/role.js");
 
-let departmentList = [];
-let employeeList = [];
-let roleList = [];
+
+const viewDepartment = () => {
+    connection.query("SELECT * FROM department", function(error, results){
+        if(error) throw error;
+        console.log(results);
+        connection.end()
+    })
+};
+
 
 const addDepartment = () => {
     inquirer.prompt([
         {
             type: "input",
-            name: "deptName",
+            name: "department_name",
             message: "What is the department name?",
         },
     ])
-
-        .then(answers => {
-            const newDepartment = new Department(answers.deptName)
-            departmentList.push(newDepartment);
-            mainMenu();
+        .then(function(answers){
+            console.log(answers);
+            connection.query('INSERT INTO department SET ?', {
+                department_name: answers.department_name
+            }, function(error){
+                if (error) throw error;
+                console.log('Added department');
+                viewDepartment();
+            })
         })
+
 };
+
+//add view employee 
 
 const addEmployee = () => {
     inquirer.prompt([
         {
             type: "input",
-            name: "firstName",
+            name: "first_name",
             message: "What is the employee's first name?",
         },
         {
             type: "input",
-            name: "lastName",
+            name: "last_name",
             message: "What is the employee's last name?",
         },
         {
             type: "input",
-            name: "roleId",
+            name: "role_id",
             message: "What is the employee's role ID?",
         },
         {
             type: "input",
-            name: "managerId",
+            name: "managmanager_id",
             message: "What is the employee manager's ID?",
         },
     ])
+    // add .then
 
-        .then(answers => {
-            const newEmployee = new Employee(answers.firstName, answers.lastName, answers.roleId, answers.managerId)
-            employeeList.push(newEmployee);
-            mainMenu();
-        })
 };
+
+//add view role
 
 const addRole = () => {
     inquirer.prompt([
@@ -69,16 +80,12 @@ const addRole = () => {
         },
         {
             type: "input",
-            name: "departmentId",
+            name: "department_id",
             message: "What is the department ID?",
         },
     ])
 
-        .then(answers => {
-            const newRole = new Role(answers.title, answers.salary, answers.departmentId)
-            roleList.push(newRole);
-            mainMenu();
-        })
+    //add .then
 };
 
 
