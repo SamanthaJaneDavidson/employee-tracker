@@ -4,16 +4,16 @@ const Department = require("./lib/department.js");
 const Employee = require("./lib/employee.js");
 const Role = require("./lib/role.js");
 
-
-const viewDepartment = () => {
-    connection.query("SELECT * FROM department", function(error, results){
-        if(error) throw error;
+// Query to view departments
+const viewDepartments = () => {
+    connection.query("SELECT * FROM department", function (error, results) {
+        if (error) throw error;
         console.log(results);
         connection.end()
     })
 };
 
-
+// Inquire prompts to add departments into existing table
 const addDepartment = () => {
     inquirer.prompt([
         {
@@ -22,21 +22,30 @@ const addDepartment = () => {
             message: "What is the department name?",
         },
     ])
-        .then(function(answers){
+        .then(function (answers) {
             console.log(answers);
             connection.query('INSERT INTO department SET ?', {
                 department_name: answers.department_name
-            }, function(error){
+            }, function (error) {
                 if (error) throw error;
                 console.log('Added department');
-                viewDepartment();
+                viewDepartments();
             })
         })
 
 };
 
-//add view employee 
+// Query to view employees 
+const viewEmployees = () => {
+    connection.query("SELECT * FROM employee", function (error, results) {
+        if (error) throw error;
+        console.log(results);
+        connection.end()
+    })
+};
 
+
+// Inquire prompts to add employees to existing table 
 const addEmployee = () => {
     inquirer.prompt([
         {
@@ -56,16 +65,37 @@ const addEmployee = () => {
         },
         {
             type: "input",
-            name: "managmanager_id",
+            name: "manager_id",
             message: "What is the employee manager's ID?",
         },
     ])
-    // add .then
+        .then(function (answers) {
+            console.log(answers);
+            connection.query('INSERT INTO employee SET ?', {
+                first_name: answers.first_name,
+                last_name: answers.last_name,
+                role_id: answers.role_id,
+                manager_id: answers.manager_id
+
+            }, function (error) {
+                if (error) throw error;
+                console.log('Added employee');
+                viewEmployees();
+            })
+        })
 
 };
 
-//add view role
+// Query to view roles 
+const viewRoles = () => {
+    connection.query("SELECT * FROM role", function (error, results) {
+        if (error) throw error;
+        console.log(results);
+        connection.end()
+    })
+};
 
+// Inquire prompts to add role to existing table 
 const addRole = () => {
     inquirer.prompt([
         {
@@ -85,7 +115,19 @@ const addRole = () => {
         },
     ])
 
-    //add .then
+    .then(function (answers) {
+        console.log(answers);
+        connection.query('INSERT INTO role SET ?', {
+            title: answers.title,
+            salary: answers.salary,
+            department_id: answers.department_id
+
+        }, function (error) {
+            if (error) throw error;
+            console.log('Added employee');
+            viewRoles();
+        })
+    })
 };
 
 
@@ -109,7 +151,7 @@ const mainMenu = () => {
                 case "Exit":
                     return program_exit();
                 case "View all departments":
-                    viewDepartment();
+                    viewDepartments();
                     break;
                 case "View all roles":
                     viewRoles();
