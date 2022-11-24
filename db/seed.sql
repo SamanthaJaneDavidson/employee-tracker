@@ -1,10 +1,10 @@
 INSERT INTO department
-(dept_name)
+(department_name)
 VALUES 
 ("Accounting", "Human Resources", "Project Management", "Operations")
 
 
-INSERT INTO job_role
+INSERT INTO role
 (title, salary, department)
 VALUES
 ('Manager',

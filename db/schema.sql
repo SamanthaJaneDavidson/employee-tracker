@@ -6,11 +6,11 @@ USE employees_db;
 
 CREATE TABLE department (
 	id INT auto_increment NOT NULL,
-    dept_name VARCHAR(30) NOT NULL,
+    department_name VARCHAR(30) NOT NULL,
 	PRIMARY KEY (id)
     );
     
-CREATE TABLE job_role (
+CREATE TABLE role (
 	id INT auto_increment NOT NULL,
     title VARCHAR(30) NOT NULL,
     salary DECIMAL NOT NULL,
