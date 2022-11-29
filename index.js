@@ -1,36 +1,46 @@
 const inquirer = require("inquirer");
 const connection = require('./db/connection.js');
+const { table } = require("table");
 const Department = require("./lib/department.js");
 const Employee = require("./lib/employee.js");
 const Role = require("./lib/role.js");
 
+
 // Query to view departments
 const viewDepartments = () => {
-    connection.query("SELECT * FROM department", function (error, results) {
-        if (error) throw error;
-        console.log(results);
-        connection.end()
-    })
+    return connection.query(
+        `SELECT * FROM department`,
+        (err, result) => {
+            if (err) console.error(err);
+            let formattedResult = result.map(obj => Object.values(obj));
+            formattedResult.unshift(["department_name"]);
+            console.log(table(formattedResult));
+            mainMenu();
+        }
+    )
 };
+
 
 // Inquire prompts to add departments into existing table
 const addDepartment = () => {
-    inquirer.prompt([
+    return inquirer.prompt([
         {
             type: "input",
             name: "department_name",
             message: "What is the department name?",
         },
     ])
-        .then(function (answers) {
-            console.log(answers);
-            connection.query('INSERT INTO department SET ?', {
-                department_name: answers.department_name
-            }, function (error) {
-                if (error) throw error;
-                console.log('Added department');
-                viewDepartments();
-            })
+        .then(param => {
+            connection.query(
+                'INSERT INTO department SET ?',
+                [param],
+                function (err, result) {
+                    if (err) {
+                        console.log(err);
+                    }
+                    mainMenu();
+                }
+            )
         })
 
 };
@@ -80,7 +90,7 @@ const addEmployee = () => {
             }, function (error) {
                 if (error) throw error;
                 console.log('Added employee');
-                viewEmployees();
+                mainMenu();
             })
         })
 
@@ -115,24 +125,28 @@ const addRole = () => {
         },
     ])
 
-    .then(function (answers) {
-        console.log(answers);
-        connection.query('INSERT INTO role SET ?', {
-            title: answers.title,
-            salary: answers.salary,
-            department_id: answers.department_id
+        .then(function (answers) {
+            console.log(answers);
+            connection.query('INSERT INTO role SET ?', {
+                title: answers.title,
+                salary: answers.salary,
+                department_id: answers.department_id
 
-        }, function (error) {
-            if (error) throw error;
-            console.log('Added employee');
-            viewRoles();
+            }, function (error) {
+                if (error) throw error;
+                console.log('Added role');
+                mainMenu();
+            })
         })
-    })
 };
 
+// Update employee 
+// const updateEmployee = () => {
+
+// }
 
 // Exit program 
-const program_exit = () => {
+const programExit = () => {
 
     connection.end();
 }
@@ -148,8 +162,6 @@ const mainMenu = () => {
     ])
         .then(({ option }) => {
             switch (option) {
-                case "Exit":
-                    return program_exit();
                 case "View all departments":
                     viewDepartments();
                     break;
@@ -170,6 +182,9 @@ const mainMenu = () => {
                     break;
                 case "Update an employee role":
                     updateEmployee();
+                    break;
+                case "Exit":
+                    programExit();
                     break;
             }
         });

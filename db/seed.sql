@@ -1,3 +1,5 @@
+USE employees_db;
+
 INSERT INTO department
 (department_name)
 VALUES 
@@ -18,7 +20,7 @@ VALUES
 INSERT INTO employee
 (first_name, last_name, role_id, manager_id)
 VALUES
-('Sam','Davidson','1', 2),
-('Anthony','Maddatu','3','4'),
-('Tom','Woods','5','6'),
-('Bob','Builder','7','8');
+('Sam','Davidson', 1 , 2),
+('Anthony','Maddatu', 3 , 4),
+('Tom','Woods', 5 , 6),
+('Bob','Builder', 7, 8);
