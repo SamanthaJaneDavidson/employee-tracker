@@ -1,9 +1,9 @@
 const inquirer = require("inquirer");
 const connection = require('./db/connection.js');
-const { table } = require("table");
-const Department = require("./lib/department.js");
-const Employee = require("./lib/employee.js");
-const Role = require("./lib/role.js");
+require("console.table");
+// const Department = require("./lib/department.js");
+// const Employee = require("./lib/employee.js");
+// const Role = require("./lib/role.js");
 
 
 // Query to view departments
@@ -14,7 +14,7 @@ const viewDepartments = () => {
             if (err) console.error(err);
             let formattedResult = result.map(obj => Object.values(obj));
             formattedResult.unshift(["department_name"]);
-            console.log(table(formattedResult));
+            console.table(formattedResult);
             mainMenu();
         }
     )
@@ -160,7 +160,8 @@ const mainMenu = () => {
             name: "option"
         }
     ])
-        .then(({ option }) => {
+        .then(({option}) => {
+            console.log(option)
             switch (option) {
                 case "View all departments":
                     viewDepartments();
