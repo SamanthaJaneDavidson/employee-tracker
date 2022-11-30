@@ -148,9 +148,8 @@ const addRole = () => {
 };
 
 // Update employee 
-// const updateEmployee = () => {
 
-// }
+
 
 // Exit program 
 const programExit = () => {
