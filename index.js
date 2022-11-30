@@ -1,9 +1,6 @@
 const inquirer = require("inquirer");
 const connection = require('./db/connection.js');
 require("console.table");
-// const Department = require("./lib/department.js");
-// const Employee = require("./lib/employee.js");
-// const Role = require("./lib/role.js");
 
 
 // Query to view departments
@@ -47,11 +44,16 @@ const addDepartment = () => {
 
 // Query to view employees 
 const viewEmployees = () => {
-    connection.query("SELECT * FROM employee", function (error, results) {
-        if (error) throw error;
-        console.log(results);
-        connection.end()
-    })
+    return connection.query(
+        `SELECT * FROM employee`,
+        (err, result) => {
+            if (err) console.error(err);
+            let formattedResult = result.map(obj => Object.values(obj));
+            formattedResult.unshift(["first_name", "last_name", "role_id", "manager_id"]);
+            console.table(formattedResult);
+            mainMenu();
+        }
+    )
 };
 
 
@@ -98,11 +100,16 @@ const addEmployee = () => {
 
 // Query to view roles 
 const viewRoles = () => {
-    connection.query("SELECT * FROM role", function (error, results) {
-        if (error) throw error;
-        console.log(results);
-        connection.end()
-    })
+    return connection.query(
+        `SELECT * FROM employee`,
+        (err, result) => {
+            if (err) console.error(err);
+            let formattedResult = result.map(obj => Object.values(obj));
+            formattedResult.unshift(["title", "salary", "department_id"]);
+            console.table(formattedResult);
+            mainMenu();
+        }
+    )
 };
 
 // Inquire prompts to add role to existing table 
