@@ -43,17 +43,29 @@ const addDepartment = () => {
 };
 
 // Query to view employees 
+// const viewEmployees = () => {
+//     return connection.query(
+//         `SELECT * FROM employee`,
+//         (err, result) => {
+//             if (err) console.error(err);
+//             let formattedResult = result.map(obj => Object.values(obj));
+//             formattedResult.unshift(["first_name", "last_name", "role_id", "manager_id"]);
+//             console.table(formattedResult);
+//             mainMenu();
+//         }
+//     )
+// };
+
 const viewEmployees = () => {
     return connection.query(
-        `SELECT * FROM employee`,
+        "SELECT employee.id, employee.first_name, employee.last_name, role.title, department_name AS department, role.salary, CONCAT(manager.first_name, ' ', manager.last_name) AS manager FROM employee LEFT JOIN role on employee.role_id = role.id LEFT JOIN department on role.department_id = department.id LEFT JOIN employee manager on manager.id = employee.manager_id;"),
         (err, result) => {
             if (err) console.error(err);
             let formattedResult = result.map(obj => Object.values(obj));
-            formattedResult.unshift(["first_name", "last_name", "role_id", "manager_id"]);
+            formattedResult.unshift(["first_name", "last_name", "role_id", "manager_id", "department_name", "title", "salary"]);
             console.table(formattedResult);
             mainMenu();
         }
-    )
 };
 
 
@@ -166,7 +178,7 @@ const mainMenu = () => {
             name: "option"
         }
     ])
-        .then(({option}) => {
+        .then(({ option }) => {
             console.log(option)
             switch (option) {
                 case "View all departments":
