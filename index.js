@@ -26,18 +26,16 @@ const addDepartment = () => {
             message: "What is the department name?",
         },
     ])
-        .then(param => {
-            connection.query(
-                'INSERT INTO department SET ?',
-                [param],
-                function (err, result) {
-                    if (err) {
-                        console.log(err);
-                    }
-                    mainMenu();
-                }
-            )
+    .then(function (answers) {
+        connection.query('INSERT INTO department SET ?', {
+            department_name: answers.department_name,
+
+        }, function (error) {
+            if (error) throw error;
+            console.log('Added department');
+            mainMenu();
         })
+    })
 
 };
 
@@ -79,7 +77,6 @@ const addEmployee = () => {
         },
     ])
         .then(function (answers) {
-            console.log(answers);
             connection.query('INSERT INTO employee SET ?', {
                 first_name: answers.first_name,
                 last_name: answers.last_name,
@@ -129,7 +126,6 @@ const addRole = () => {
     ])
 
         .then(function (answers) {
-            console.log(answers);
             connection.query('INSERT INTO role SET ?', {
                 title: answers.title,
                 salary: answers.salary,
@@ -144,7 +140,33 @@ const addRole = () => {
 };
 
 // Update employee 
+const updateEmployee = () => {
+    inquirer.prompt([
+        {
+            type: "list",
+            name: "update_employee",
+            message: "Select employee to update role?",
+            choices: "SELECT first_name FROM employee", //??????
+        },
+        {
+            type: "list",
+            name: "new_role",
+            message: "What is the new role?",
+            choices: "SELECT role_id FROM role", //???????
+        },
+    ])
 
+        .then(function (answers) {
+            connection.query('UPDATE employee SET ?', { //?????????How do I select the right person? 
+                role_id: answers.new_role
+
+           }, function (error) {
+                if (error) throw error;
+                console.log('Added role');
+                mainMenu();
+            })
+        })
+};
 
 
 // Exit program 
