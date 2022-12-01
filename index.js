@@ -43,30 +43,30 @@ const addDepartment = () => {
 };
 
 // Query to view employees 
-// const viewEmployees = () => {
-//     return connection.query(
-//         `SELECT * FROM employee`,
-//         (err, result) => {
-//             if (err) console.error(err);
-//             let formattedResult = result.map(obj => Object.values(obj));
-//             formattedResult.unshift(["first_name", "last_name", "role_id", "manager_id"]);
-//             console.table(formattedResult);
-//             mainMenu();
-//         }
-//     )
-// };
-
 const viewEmployees = () => {
     return connection.query(
-        "SELECT employee.id, employee.first_name, employee.last_name, role.title, department_name AS department, role.salary, CONCAT(manager.first_name, ' ', manager.last_name) AS manager FROM employee LEFT JOIN role on employee.role_id = role.id LEFT JOIN department on role.department_id = department.id LEFT JOIN employee manager on manager.id = employee.manager_id;"),
+        `SELECT * FROM employee`,
         (err, result) => {
             if (err) console.error(err);
             let formattedResult = result.map(obj => Object.values(obj));
-            formattedResult.unshift(["first_name", "last_name", "role_id", "manager_id", "department_name", "title", "salary"]);
+            formattedResult.unshift(["first_name", "last_name", "role_id", "manager_id"]);
             console.table(formattedResult);
             mainMenu();
         }
+    )
 };
+
+// const viewEmployees = () => {
+//     return connection.query(
+//         "SELECT employee.id, employee.first_name, employee.last_name, role.title, department_name AS department, role.salary, CONCAT(manager.first_name, ' ', manager.last_name) AS manager FROM employee LEFT JOIN role on employee.role_id = role.id LEFT JOIN department on role.department_id = department.id LEFT JOIN employee manager on manager.id = employee.manager_id;"),
+//         (err, result) => {
+//             if (err) console.error(err);
+//             let formattedResult = result.map(obj => Object.values(obj));
+//             formattedResult.unshift(["first_name", "last_name", "role_id", "manager_id", "department_name", "title", "salary"]);
+//             console.table(formattedResult);
+//             mainMenu();
+//         }
+// };
 
 
 // Inquire prompts to add employees to existing table 
@@ -113,7 +113,7 @@ const addEmployee = () => {
 // Query to view roles 
 const viewRoles = () => {
     return connection.query(
-        `SELECT * FROM employee`,
+        `SELECT * FROM role`,
         (err, result) => {
             if (err) console.error(err);
             let formattedResult = result.map(obj => Object.values(obj));
