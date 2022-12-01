@@ -141,28 +141,32 @@ const addRole = () => {
 
 // Update employee 
 const updateEmployee = () => {
+
+    let employeeChoices = employee.first_name;
+    let roleChoices = role.id;
+
     inquirer.prompt([
         {
             type: "list",
             name: "update_employee",
             message: "Select employee to update role?",
-            choices: "SELECT first_name FROM employee", //??????
+            choices: employeeChoices, //??????
         },
         {
             type: "list",
             name: "new_role",
             message: "What is the new role?",
-            choices: "SELECT role_id FROM role", //???????
+            choices: roleChoices, //???????
         },
     ])
 
         .then(function (answers) {
-            connection.query('UPDATE employee SET ?', { //?????????How do I select the right person? 
+            connection.query('UPDATE employee SET role WHERE ?', { //?????????
                 role_id: answers.new_role
 
            }, function (error) {
                 if (error) throw error;
-                console.log('Added role');
+                console.log('Updated employee role');
                 mainMenu();
             })
         })
