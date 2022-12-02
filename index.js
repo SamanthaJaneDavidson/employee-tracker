@@ -26,16 +26,16 @@ const addDepartment = () => {
             message: "What is the department name?",
         },
     ])
-    .then(function (answers) {
-        connection.query('INSERT INTO department SET ?', {
-            department_name: answers.department_name,
+        .then(function (answers) {
+            connection.query('INSERT INTO department SET ?', {
+                department_name: answers.department_name,
 
-        }, function (error) {
-            if (error) throw error;
-            console.log('Added department');
-            mainMenu();
+            }, function (error) {
+                if (error) throw error;
+                console.log('Added department');
+                mainMenu();
+            })
         })
-    })
 
 };
 
@@ -103,7 +103,7 @@ const viewRoles = () => {
         mainMenu();
     });
 };
-    
+
 
 // Inquire prompts to add role to existing table 
 const addRole = () => {
@@ -140,83 +140,102 @@ const addRole = () => {
 };
 
 // Update employee 
-const updateEmployee = () => {
+const employeeQuery = (query) => {
 
-    let employeeChoices = employee.first_name;
-    let roleChoices = role.id;
-
-    inquirer.prompt([
-        {
-            type: "list",
-            name: "update_employee",
-            message: "Select employee to update role?",
-            choices: employeeChoices, //??????
-        },
-        {
-            type: "list",
-            name: "new_role",
-            message: "What is the new role?",
-            choices: roleChoices, //???????
-        },
-    ])
-
-        .then(function (answers) {
-            connection.query('UPDATE employee SET role WHERE ?', { //?????????
-                role_id: answers.new_role
-
-           }, function (error) {
-                if (error) throw error;
-                console.log('Updated employee role');
-                mainMenu();
-            })
-        })
-};
-
-
-// Exit program 
-const programExit = () => {
-
-    connection.end();
+    return new Promise((resolve, reject) => {
+        connection.query(query, function (err, results) {
+            if (err) {
+                return reject(err);
+            }
+            return resolve(results);
+        });
+    });
 }
 
-const mainMenu = () => {
-    return inquirer.prompt([
-        {
-            type: "list",
-            message: "What would you like to do?",
-            choices: ["View all departments", "View all roles", "View all employees", "Add a department", "Add a role", "Add an employee", "Update an employee role", "Exit"],
-            name: "option"
-        }
-    ])
-        .then(({ option }) => {
-            console.log(option)
-            switch (option) {
-                case "View all departments":
-                    viewDepartments();
-                    break;
-                case "View all roles":
-                    viewRoles();
-                    break;
-                case "View all employees":
-                    viewEmployees();
-                    break;
-                case "Add a department":
-                    addDepartment();
-                    break;
-                case "Add a role":
-                    addRole();
-                    break;
-                case "Add an employee":
-                    addEmployee();
-                    break;
-                case "Update an employee role":
-                    updateEmployee();
-                    break;
-                case "Exit":
-                    programExit();
-                    break;
-            }
-        });
-};
+const updateEmployee = async () => {
+    try{
+        const results = await employeeQuery('SELECT * FROM employee');
+        console.log(results);
+    }
 
-mainMenu();
+    catch(err){
+        console.log("No employees found");
+    }
+    connection.end();
+
+        return inquirer.prompt([
+            {
+                type: "list",
+                name: "update_employee",
+                message: "Select employee to update role?",
+                choices: results.first_name, 
+            },
+            {
+                type: "list",
+                name: "new_role",
+                message: "What is the new role?",
+                choices: results.role_id, 
+            },
+        ])
+
+            .then(function (answers) {
+                connection.query('UPDATE employee SET role WHERE ????', {
+                    role_id: answers.new_role
+
+               }, function (error) {
+                    if (error) throw error;
+                    console.log('Updated employee role');
+                    mainMenu();
+                })
+            })
+    };
+
+
+
+    // Exit program 
+    const programExit = () => {
+
+        connection.end();
+    }
+
+    const mainMenu = () => {
+        return inquirer.prompt([
+            {
+                type: "list",
+                message: "What would you like to do?",
+                choices: ["View all departments", "View all roles", "View all employees", "Add a department", "Add a role", "Add an employee", "Update an employee role", "Exit"],
+                name: "option"
+            }
+        ])
+            .then(({ option }) => {
+                console.log(option)
+                switch (option) {
+                    case "View all departments":
+                        viewDepartments();
+                        break;
+                    case "View all roles":
+                        viewRoles();
+                        break;
+                    case "View all employees":
+                        viewEmployees();
+                        break;
+                    case "Add a department":
+                        addDepartment();
+                        break;
+                    case "Add a role":
+                        addRole();
+                        break;
+                    case "Add an employee":
+                        addEmployee();
+                        break;
+                    case "Update an employee role":
+                        updateEmployee();
+                        break;
+                    case "Exit":
+                        programExit();
+                        break;
+                }
+            });
+    };
+
+    mainMenu();
