@@ -139,7 +139,7 @@ const addRole = () => {
         })
 };
 
-// Update employee 
+// // Update employee 
 const employeeQuery = (query) => {
 
     return new Promise((resolve, reject) => {
@@ -184,8 +184,8 @@ const updateEmployee = async () => {
         ])
 
             .then(function (answers) {
-                connection.query('UPDATE employee SET role WHERE ????', {
-                    role_id: answers.new_role
+                console.log(answers)
+                connection.query('UPDATE employee SET role WHERE ?', {
 
                 }, function (error) {
                     if (error) throw error;
@@ -200,7 +200,6 @@ const updateEmployee = async () => {
     }
     connection.end();
 };
-
 
 
 // Exit program 
