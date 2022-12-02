@@ -153,28 +153,33 @@ const employeeQuery = (query) => {
 }
 
 const updateEmployee = async () => {
-    try{
-        const results = await employeeQuery('SELECT * FROM employee');
-        console.log(results);
-    }
+    try {
+        const employeeResults = await employeeQuery('SELECT * FROM employee');
 
-    catch(err){
-        console.log("No employees found");
-    }
-    connection.end();
+        const employeeChoices = employeeResults.map(({ id, first_name, last_name }) => ({
+            name: `${first_name} ${last_name}`,
+            value: id
+        }));
+
+        const roleResults = await employeeQuery('SELECT * FROM role');
+
+        const roleChoices = roleResults.map(({ id, title }) => ({
+            name: `${title}`,
+            value: id
+        }));
 
         return inquirer.prompt([
             {
                 type: "list",
                 name: "update_employee",
                 message: "Select employee to update role?",
-                choices: results.first_name, 
+                choices: employeeChoices,
             },
             {
                 type: "list",
                 name: "new_role",
                 message: "What is the new role?",
-                choices: results.role_id, 
+                choices: roleChoices,
             },
         ])
 
@@ -182,60 +187,66 @@ const updateEmployee = async () => {
                 connection.query('UPDATE employee SET role WHERE ????', {
                     role_id: answers.new_role
 
-               }, function (error) {
+                }, function (error) {
                     if (error) throw error;
                     console.log('Updated employee role');
                     mainMenu();
                 })
             })
-    };
-
-
-
-    // Exit program 
-    const programExit = () => {
-
-        connection.end();
     }
 
-    const mainMenu = () => {
-        return inquirer.prompt([
-            {
-                type: "list",
-                message: "What would you like to do?",
-                choices: ["View all departments", "View all roles", "View all employees", "Add a department", "Add a role", "Add an employee", "Update an employee role", "Exit"],
-                name: "option"
-            }
-        ])
-            .then(({ option }) => {
-                console.log(option)
-                switch (option) {
-                    case "View all departments":
-                        viewDepartments();
-                        break;
-                    case "View all roles":
-                        viewRoles();
-                        break;
-                    case "View all employees":
-                        viewEmployees();
-                        break;
-                    case "Add a department":
-                        addDepartment();
-                        break;
-                    case "Add a role":
-                        addRole();
-                        break;
-                    case "Add an employee":
-                        addEmployee();
-                        break;
-                    case "Update an employee role":
-                        updateEmployee();
-                        break;
-                    case "Exit":
-                        programExit();
-                        break;
-                }
-            });
-    };
+    catch (err) {
+        console.log("No employees found");
+    }
+    connection.end();
+};
 
-    mainMenu();
+
+
+// Exit program 
+const programExit = () => {
+
+    connection.end();
+}
+
+const mainMenu = () => {
+    return inquirer.prompt([
+        {
+            type: "list",
+            message: "What would you like to do?",
+            choices: ["View all departments", "View all roles", "View all employees", "Add a department", "Add a role", "Add an employee", "Update an employee role", "Exit"],
+            name: "option"
+        }
+    ])
+        .then(({ option }) => {
+            console.log(option)
+            switch (option) {
+                case "View all departments":
+                    viewDepartments();
+                    break;
+                case "View all roles":
+                    viewRoles();
+                    break;
+                case "View all employees":
+                    viewEmployees();
+                    break;
+                case "Add a department":
+                    addDepartment();
+                    break;
+                case "Add a role":
+                    addRole();
+                    break;
+                case "Add an employee":
+                    addEmployee();
+                    break;
+                case "Update an employee role":
+                    updateEmployee();
+                    break;
+                case "Exit":
+                    programExit();
+                    break;
+            }
+        });
+};
+
+mainMenu();
