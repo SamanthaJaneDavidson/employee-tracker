@@ -185,9 +185,12 @@ const updateEmployee = async () => {
 
             .then(function (answers) {
                 console.log(answers)
-                connection.query('UPDATE employee SET role WHERE ?', {
+                connection.query('UPDATE employee SET role = ? WHERE ?', [
+                    answers.new_role,
+                    answers.update_employee
+                ],
 
-                }, function (error) {
+                function (error) {
                     if (error) throw error;
                     console.log('Updated employee role');
                     mainMenu();
