@@ -1,6 +1,6 @@
 const inquirer = require("inquirer");
 const connection = require('./db/connection.js');
-require("console.table");
+// require("console.table");
 
 
 // Query to view departments
@@ -14,7 +14,6 @@ const viewDepartments = () => {
         mainMenu();
     });
 };
-
 
 
 // Inquire prompts to add departments into existing table
@@ -201,7 +200,6 @@ const updateEmployee = async () => {
     catch (err) {
         console.log("No employees found");
     }
-    connection.end();
 };
 
 
@@ -212,7 +210,7 @@ const programExit = () => {
 }
 
 const mainMenu = () => {
-    return inquirer.prompt([
+    inquirer.prompt([
         {
             type: "list",
             message: "What would you like to do?",
