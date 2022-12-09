@@ -35,7 +35,6 @@ const addDepartment = () => {
                 mainMenu();
             })
         })
-
 };
 
 
