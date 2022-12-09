@@ -184,7 +184,7 @@ const updateEmployee = async () => {
 
             .then(function (answers) {
                 console.log(answers)
-                connection.query('UPDATE employee SET role = ? WHERE ?', [
+                connection.query('UPDATE employee SET role_id = ? WHERE ?', [
                     answers.new_role,
                     answers.update_employee
                 ],
